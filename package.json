@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --mode development",
     "build": "vue-cli-service build",
-    "watch": "vue-cli-service build --watch"
+    "watch": "vue-cli-service build --watch --dest ../virtuatable-auth-api/public"
   },
   "dependencies": {
     "axios": "^0.26.1",

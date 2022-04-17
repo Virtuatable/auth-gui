@@ -28,7 +28,18 @@ export default class Sessions extends Vue {
    */
   public submit() {
     if (this.valid) {
-      api.createSession(this.username, this.password)
+      api.createSession(this.username, this.password, this.application_id, this.redirect_uri)
+        .then((response: any) => {
+          if (response.application.premium) {
+            window.location = response.redirect_uri;
+          }
+          else {
+
+          }
+        })
+        .catch((response: any) => {
+
+        })
     }
   }
 
@@ -44,8 +55,8 @@ export default class Sessions extends Vue {
     return this.param('redirect_uri');
   }
 
-  private get csrf(): string {
-    return document.querySelector('meta[name=csrf]')?.getAttribute('content') || '';
+  private get response_type(): string {
+    return this.param('response_type')
   }
 
   private param(name: string): string {
@@ -92,6 +103,9 @@ export default class Sessions extends Vue {
             </v-alert>
             <v-alert color="red" type="error" v-else-if="!redirect_uri">
               You must provide the redirect_uri field.
+            </v-alert>
+            <v-alert v-else-if="response_type != 'code'" type="error">
+              You must provide the response_type field with a value of "code"
             </v-alert>
 
             <!-- The display of the form if all parameters are correctly given -->
