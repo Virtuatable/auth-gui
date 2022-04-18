@@ -19,6 +19,10 @@ export default class Sessions extends Vue {
   private username: string = '';
   // The password the user will input in the form.
   private password: string = '';
+  // Indicates whether the loading spinner should be shown or not
+  private loading: boolean = true;
+
+  private apiError: string = ''
 
   /**
    * Submits the form by sending a request to the server as a POST /sessions.
@@ -28,7 +32,7 @@ export default class Sessions extends Vue {
    */
   public submit() {
     if (this.valid) {
-      api.createSession(this.username, this.password, this.application_id, this.redirect_uri)
+      api.createSession(this.username, this.password, this.application_id)
         .then((response: any) => {
           if (response.application.premium) {
             window.location = response.redirect_uri;
@@ -41,6 +45,21 @@ export default class Sessions extends Vue {
 
         })
     }
+  }
+
+  public mounted() {
+    this.checkApplication();
+  }
+
+  public checkApplication() {
+    api.checkApplication(this.application_id, this.redirect_uri)
+      .catch((error: any) => {
+        this.apiError = `${error.response.data.field}.${error.response.data.error}`
+        console.log(this.apiError);
+      })
+      .finally(() => {
+        this.loading = false;
+      })
   }
 
   /**
@@ -107,20 +126,31 @@ export default class Sessions extends Vue {
             <v-alert v-else-if="response_type != 'code'" type="error">
               You must provide the response_type field with a value of "code"
             </v-alert>
+            <v-alert v-else-if="apiError == 'application_id.unknown'" type="error">
+              You must provide an existing application UUID
+            </v-alert>
+            <v-alert v-else-if="apiError == 'redirect_uri.unknown'" type="error">
+              This redirection URI is not declared in this application.
+            </v-alert>
 
-            <!-- The display of the form if all parameters are correctly given -->
-            <v-form @submit.prevent="submit" ref="loginForm" v-else>
-              <v-card>
-                <v-card-title>Login</v-card-title>
-                <v-card-text>
-                  <v-text-field outlined v-model="username" label="Username" :rules="rules.username"></v-text-field>
-                  <v-text-field outlined v-model="password" label="Password" type="password" :rules="rules.password"></v-text-field>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn text color="primary" type="submit">Log in</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-form>
+            <template v-else>
+              <div v-if="loading" class="text-center">
+                <v-progress-circular indeterminate color="primary" :size="50"></v-progress-circular>
+              </div>
+              <!-- The display of the form if all parameters are correctly given -->
+              <v-form @submit.prevent="submit" ref="loginForm" v-else>
+                <v-card>
+                  <v-card-title>Login</v-card-title>
+                  <v-card-text>
+                    <v-text-field outlined v-model="username" label="Username" :rules="rules.username"></v-text-field>
+                    <v-text-field outlined v-model="password" label="Password" type="password" :rules="rules.password"></v-text-field>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn text color="primary" type="submit">Log in</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-form>
+            </template>
           </v-col>
         </v-row>
       </v-container>
