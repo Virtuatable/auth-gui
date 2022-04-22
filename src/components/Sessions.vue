@@ -1,6 +1,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import api from '@/utils/Api'
+import router from '@/router'
 
 /**
  * This form will prompt the user to provide its username and password to
@@ -24,6 +25,8 @@ export default class Sessions extends Vue {
 
   private apiError: string = ''
 
+  private application: any = {};
+
   /**
    * Submits the form by sending a request to the server as a POST /sessions.
    * Parameters :
@@ -34,15 +37,14 @@ export default class Sessions extends Vue {
     if (this.valid) {
       api.createSession(this.username, this.password, this.application_id)
         .then((response: any) => {
-          if (response.application.premium) {
-            window.location = response.redirect_uri;
+          if (this.application.premium) {
+            const uri: any = new URL(this.redirect_uri)
+            uri.searchParams.append('authorization_code', response.authorization.code);
+            window.location = uri.toString()
           }
           else {
-
+            router.push({name: 'rights', query: this.$route.query})
           }
-        })
-        .catch((response: any) => {
-
         })
     }
   }
@@ -53,9 +55,11 @@ export default class Sessions extends Vue {
 
   public checkApplication() {
     api.checkApplication(this.application_id, this.redirect_uri)
+      .then((response:any) => {
+        this.application = response.application
+      })
       .catch((error: any) => {
         this.apiError = `${error.response.data.field}.${error.response.data.error}`
-        console.log(this.apiError);
       })
       .finally(() => {
         this.loading = false;
