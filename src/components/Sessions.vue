@@ -36,11 +36,14 @@ export default class Sessions extends Vue {
   public submit() {
     if (this.valid) {
       api.createSession(this.username, this.password, this.application_id)
-        .then((response: any) => {
+        .then(() => {
           if (this.application.premium) {
-            const uri: any = new URL(this.redirect_uri)
-            uri.searchParams.append('authorization_code', response.authorization.code);
-            window.location = uri.toString()
+            api.createAuthorization(this.application.id)
+              .then((response: any) => {
+                const uri: any = new URL(this.redirect_uri)
+                uri.searchParams.append('authorization_code', response.authorization.code);
+                window.location = uri.toString()
+              });
           }
           else {
             router.push({name: 'rights', query: this.$route.query})
