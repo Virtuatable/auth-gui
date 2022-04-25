@@ -1,0 +1,32 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/node:16.14
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Build the project into the ./dist folder
+          command: npm run build
+      - run:
+          name: Install MinIO S3 management tool
+          command: wget https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
+      - run:
+          name: Configure the mc binary with the Scaleway endpoint
+          command: ./mc alias set virtuatable ${BS_ENDPOINT} ${BS_ACCESS_KEY} ${BS_SECRET_KEY}
+      - run:
+          name: copy the folder into the correct directory
+          command: ./mc cp --recursive dist/ virtuatable/auth-gui/$(date +%s)
+
+workflows:
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - master

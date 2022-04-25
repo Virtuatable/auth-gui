@@ -2,10 +2,6 @@ import axios from 'axios'
 
 export class Api {
 
-  public get uri() {
-    return process.env.VUE_APP_API_URI || 'http://localhost:9292'
-  }
-
   /**
    * 
    * @param username The nickname of the user currently authenticating.
@@ -13,7 +9,7 @@ export class Api {
    * @returns 
    */
   public async createSession(username: string, password: string, application_id: string) {
-    const uri: string = `${this.uri}/sessions?authenticity_token=${this.csrf}`;
+    const uri: string = `/sessions?authenticity_token=${this.csrf}`;
     const payload: string = JSON.stringify({
       username: username,
       password: password,
@@ -27,7 +23,7 @@ export class Api {
   }
 
   public getSession(session_id: string) {
-    return axios.get(`${this.uri}/sessions/${session_id}`)
+    return axios.get(`/sessions/${session_id}`)
   }
 
   public createAuthorization(application_id: string) {
@@ -35,7 +31,7 @@ export class Api {
       application_id: application_id,
       session_id: localStorage.getItem('session_id') || ''
     })
-    return axios.post(`${this.uri}/authorizations?authenticity_token=${this.csrf}`, payload)
+    return axios.post(`/authorizations?authenticity_token=${this.csrf}`, payload)
   }
 
   /**
@@ -44,7 +40,7 @@ export class Api {
    * @param redirect_uri the redirection URI to check it belongs to the application
    */
   public checkApplication(application_id: string, redirect_uri: string) {
-    const uri: string = `${this.uri}/app-check?authenticity_token=${this.csrf}`;
+    const uri: string = `/app-check?authenticity_token=${this.csrf}`;
     const payload: string = JSON.stringify({
       redirect_uri: redirect_uri,
       application_id: application_id
