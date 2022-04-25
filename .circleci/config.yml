@@ -7,20 +7,17 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install MinIO S3 management tool
-          command: wget https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x mc
-      - run:
-          name: Initializing the mc binary environment for scaleway
-          command: mc alias set virtuatable ${BS_ENDPOINT} ${BS_ACCESS_KEY} ${BS_SECRET_KEY}
-      - run:
           name: Install dependencies for the node project
           command: npm install
       - run:
           name: Builds the project
           command: npx run vue-cli-service
       - run:
-          name: Copy the content of the dist build into the bucket
-          command: mc cp --recursive dist/ virtuatable/auth-gui/$(data +%s)
+          name: Install MinIO S3 management tool
+          command: |
+            wget https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x mc &&
+            mc alias set virtuatable ${BS_ENDPOINT} ${BS_ACCESS_KEY} ${BS_SECRET_KEY} &&
+            mc cp --recursive dist/ virtuatable/auth-gui/$(data +%s)
 
 workflows:
   build:
