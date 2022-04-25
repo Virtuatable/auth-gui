@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --mode development",
-    "build": "vue-cli-service build --dest ../api/public",
-    "watch": "vue-cli-service build --watch --dest ../api/public"
+    "build": "vue-cli-service build --dest dist/test",
+    "watch": "vue-cli-service build --watch"
   },
   "dependencies": {
     "axios": "^0.26.1",
