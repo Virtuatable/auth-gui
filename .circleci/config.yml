@@ -19,10 +19,8 @@ jobs:
           name: Configure the mc binary with the Scaleway endpoint
           command: ./mc alias set virtuatable ${BS_ENDPOINT} ${BS_ACCESS_KEY} ${BS_SECRET_KEY}
       - run:
-          command: date +%s
-      - run:
           name: copy the folder into the correct directory
-          command: ./mc cp --recursive dist/ virtuatable/auth-gui/$(data +%s)
+          command: ./mc cp --recursive dist/ virtuatable/auth-gui/$(date +%s)
 
 workflows:
   build:
