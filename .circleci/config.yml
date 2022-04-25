@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Install dependencies for the node project and builds it
-          command: npm install && npx run vue-cli-service
+          command: npm install && npm run build
       - run:
           name: Install MinIO S3 management tool
           command: |
