@@ -26,7 +26,7 @@ jobs:
           command: ./mc cp --recursive dist/ virtuatable/auth-gui/${UI_VERSION}
       - run:
           name: change the current version in the "current" file
-          command: echo ${UI_VERSION} > current && ./mc cp current virtuatable/current
+          command: echo ${UI_VERSION} > current && ./mc cp current virtuatable/auth-gui
 
 workflows:
   build:
