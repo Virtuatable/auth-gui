@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Sessions from '@/components/Sessions.vue'
 import Rights from '@/components/Rights.vue'
+import Home from '@/components/Home.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,11 @@ const routes: Array<RouteConfig> = [
     path: '/rights',
     name: 'rights',
     component: Rights
+  },
+  {
+    path: '*',
+    name: 'home',
+    component: Home
   }
 ]
 
