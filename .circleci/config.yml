@@ -19,8 +19,14 @@ jobs:
           name: Configure the mc binary with the Scaleway endpoint
           command: ./mc alias set virtuatable ${BS_ENDPOINT} ${BS_ACCESS_KEY} ${BS_SECRET_KEY}
       - run:
+          name: Store the version somewhere to be reused
+          command: echo "export UI_VERSION=$(date +%s)" >> $BASH_ENV
+      - run:
           name: copy the folder into the correct directory
-          command: ./mc cp --recursive dist/ virtuatable/auth-gui/$(date +%s)
+          command: ./mc cp --recursive dist/ virtuatable/auth-gui/${UI_VERSION}
+      - run:
+          name: change the current version in the "current" file
+          command: echo ${UI_VERSION} > current && ./mc cp current virtuatable/current
 
 workflows:
   build:
