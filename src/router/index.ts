@@ -7,7 +7,7 @@ Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
-    path: '/sessions',
+    path: '/login',
     name: 'sessions',
     component: Sessions
   },
