@@ -8,12 +8,12 @@ Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
-    path: '/login',
+    path: '/ui/login',
     name: 'sessions',
     component: Sessions
   },
   {
-    path: '/rights',
+    path: '/ui/rights',
     name: 'rights',
     component: Rights
   },

@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --mode development",
     "build": "vue-cli-service build",
+    "locale-build": "vue-cli-service build --dest ../virtuatable-auth-api/public/auth",
     "watch": "vue-cli-service build --watch"
   },
   "dependencies": {
