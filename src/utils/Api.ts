@@ -8,12 +8,12 @@ export class Api {
    * @param password The password the user has entered in the cyphered field.
    * @returns 
    */
-  public async createSession(username: string, password: string, application_id: string) {
+  public async createSession(username: string, password: string, client_id: string) {
     const uri: string = `/auth/sessions?authenticity_token=${this.csrf}`;
     const payload: string = JSON.stringify({
       username: username,
       password: password,
-      application_id: application_id
+      client_id: client_id
     });
     return axios.post(uri, payload, { headers: this.headers })
       .then((response: any) => {
@@ -26,27 +26,22 @@ export class Api {
     return axios.get(`/auth/sessions/${session_id}`)
   }
 
-  public createAuthorization(application_id: string) {
+  public createAuthorization(client_id: string) {
     const payload: string = JSON.stringify({
-      application_id: application_id,
+      client_id: client_id,
       session_id: localStorage.getItem('session_id') || ''
     })
-    return axios.post(`/auth/authorizations?authenticity_token=${this.csrf}`, payload)
+    return axios.post(`/auth/authorizations?authenticity_token=${this.csrf}`, payload, {headers: this.headers})
   }
 
   /**
    * 
-   * @param application_id the UUID of the application to check the existence
+   * @param client_id the UUID of the application to check the existence
    * @param redirect_uri the redirection URI to check it belongs to the application
    */
-  public checkApplication(application_id: string, redirect_uri: string) {
-    const uri: string = `/auth/app-check?authenticity_token=${this.csrf}`;
-    const payload: string = JSON.stringify({
-      redirect_uri: redirect_uri,
-      application_id: application_id
-    });
-    return axios.post(uri, payload, { headers: this.headers })
-      .then((response: any) => response.data)
+  public checkApplication(client_id: string, redirect_uri: string) {
+    const uri: string = `/auth/applications/${client_id}?authenticity_token=${this.csrf}&redirect_uri=${redirect_uri}`;
+    return axios.get(uri, { headers: this.headers }).then((resp: any) => resp.data)
   }
 
   private get csrf(): string {

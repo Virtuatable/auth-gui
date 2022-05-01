@@ -13,7 +13,7 @@ export default class Rights extends Vue {
   private application: any = {};
 
   public mounted() {
-    api.checkApplication(this.application_id, this.redirect_uri)
+    api.checkApplication(this.client_id, this.redirect_uri)
       .then((response:any) => {
         this.application = response.application
       })
@@ -31,7 +31,7 @@ export default class Rights extends Vue {
   }
 
   public createAuthorization() {
-    api.createAuthorization(this.application.id)
+    api.createAuthorization(this.application.client_id)
       .then((response: any) => {
         const uri: any = new URL(this.redirect_uri)
         uri.searchParams.append('authorization_code', response.data.code);
@@ -48,8 +48,8 @@ export default class Rights extends Vue {
    * Extracts the application UUID from the querystring
    * @return {String} the value of the application uniq identifier making requests.
    */
-  private get application_id(): string {
-    return this.param('application_id');
+  private get client_id(): string {
+    return this.param('client_id');
   }
 
   private get redirect_uri(): string {
@@ -78,8 +78,8 @@ export default class Rights extends Vue {
         <v-row>
           <v-col cols="6" offset="3">
             <!-- The display of the errors when a parameter is missing -->
-            <v-alert color="red" type="error" v-if="!application_id">
-              You must provide the application_id field.
+            <v-alert color="red" type="error" v-if="!client_id">
+              You must provide the client_id field.
             </v-alert>
             <v-alert color="red" type="error" v-else-if="!redirect_uri">
               You must provide the redirect_uri field.
@@ -93,7 +93,7 @@ export default class Rights extends Vue {
             <v-alert v-else-if="apiError == 'session_id.unknown'" type="error">
               Your session token has not been found.
             </v-alert>
-            <v-alert v-else-if="apiError == 'application_id.unknown'" type="error">
+            <v-alert v-else-if="apiError == 'client_id.unknown'" type="error">
               You must provide an existing application UUID
             </v-alert>
             <v-alert v-else-if="apiError == 'redirect_uri.unknown'" type="error">
