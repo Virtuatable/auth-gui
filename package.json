@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "local-build": "vue-cli-service build --dest ../virtuatable-auth-api/public/auth",
     "watch": "vue-cli-service build --watch",
-    "local-watch": "vue-cli-service build --dest ../virtuatable-auth-api/public/auth --watch"
+    "local-watch": "vue-cli-service build --dest ../auth-api/public/auth --watch"
   },
   "dependencies": {
     "axios": "^0.26.1",
