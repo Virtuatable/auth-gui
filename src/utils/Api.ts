@@ -17,7 +17,7 @@ export class Api {
     });
     return axios.post(uri, payload, { headers: this.headers })
       .then((response: any) => {
-        localStorage.setItem('session_id', response.data.session.token);
+        localStorage.setItem('session_id', response.data.token);
         return response.data;
       })
   }
