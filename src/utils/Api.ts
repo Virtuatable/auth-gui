@@ -9,11 +9,12 @@ export class Api {
    * @returns 
    */
   public async createSession(username: string, password: string, client_id: string) {
-    const uri: string = `/auth/sessions?_csrf=${this.csrf}`;
+    const uri: string = '/auth/sessions';
     const payload: string = JSON.stringify({
       username: username,
       password: password,
-      client_id: client_id
+      client_id: client_id,
+      _csrf: this.csrf
     });
     return axios.post(uri, payload, { headers: this.headers })
       .then((response: any) => {
@@ -29,9 +30,10 @@ export class Api {
   public createAuthorization(client_id: string) {
     const payload: string = JSON.stringify({
       client_id: client_id,
-      session_id: localStorage.getItem('session_id') || ''
+      session_id: localStorage.getItem('session_id') || '',
+      _csrf: this.csrf
     })
-    return axios.post(`/auth/authorizations?_csrf=${this.csrf}`, payload, {headers: this.headers})
+    return axios.post('/auth/authorizations', payload, {headers: this.headers})
   }
 
   /**
@@ -40,7 +42,7 @@ export class Api {
    * @param redirect_uri the redirection URI to check it belongs to the application
    */
   public checkApplication(client_id: string, redirect_uri: string) {
-    const uri: string = `/auth/applications/${client_id}?_csrf=${this.csrf}&redirect_uri=${redirect_uri}`;
+    const uri: string = `/auth/applications/${client_id}?redirect_uri=${redirect_uri}`;
     return axios.get(uri, { headers: this.headers }).then((resp: any) => resp.data)
   }
 
