@@ -13,8 +13,7 @@ export class Api {
     const payload: string = JSON.stringify({
       username: username,
       password: password,
-      client_id: client_id,
-      _csrf: this.csrf
+      client_id: client_id
     });
     return axios.post(uri, payload, { headers: this.headers })
       .then((response: any) => {
@@ -30,8 +29,7 @@ export class Api {
   public createAuthorization(client_id: string) {
     const payload: string = JSON.stringify({
       client_id: client_id,
-      session_id: localStorage.getItem('session_id') || '',
-      _csrf: this.csrf
+      session_id: localStorage.getItem('session_id') || ''
     })
     return axios.post('/auth/authorizations', payload, {headers: this.headers})
   }
@@ -44,12 +42,6 @@ export class Api {
   public checkApplication(client_id: string, redirect_uri: string) {
     const uri: string = `/auth/applications/${client_id}?redirect_uri=${redirect_uri}`;
     return axios.get(uri, { headers: this.headers }).then((resp: any) => resp.data)
-  }
-
-  private get csrf(): string {
-    return document
-      ?.querySelector('input[name=_csrf]')
-      ?.getAttribute('value') || '';
   }
 
   private get headers(): {[key: string]: string} {
